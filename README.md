@@ -159,39 +159,7 @@ Foram executados com sucesso:
 - 5 modelos de Staging.
 - 10 modelos de Marts.
 - 16 testes de qualidade.
-
-## Como executar
-
-### 1. Configurar o ambiente
-
-Criar e instalar o ambiente Python e as dependências necessárias para o projeto.
-
-### 2. Configurar o Snowflake
-
-Configurar o perfil dbt em:
-
-`~/.dbt/profiles.yml`
-
-O perfil utilizado pelo projeto é `cnpj_pipeline`.
-
-A senha deve ser fornecida por variável de ambiente, sem armazená-la no repositório.
-
-### 3. Executar o dbt
-
-```powershell
-.\.venv\Scripts\dbt.exe debug
-```
-
-```powershell
-.\.venv\Scripts\dbt.exe build
-```
-
-### 4. Gerar a documentação
-
-```powershell
-.\.venv\Scripts\dbt.exe docs generate
-```
-
+ 
 ## Considerações finais
 
 Este projeto demonstra a construção de um pipeline de Engenharia de Dados utilizando ferramentas de armazenamento em nuvem, processamento de dados, modelagem analítica e validação de qualidade.
