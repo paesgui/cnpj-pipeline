@@ -1,0 +1,38 @@
+
+SELECT
+    E.CODIGO_NATUREZA,
+    E.DESCRICAO_NATUREZA,
+    E.CODIGO_PORTE,
+    E.TOTAL_EMPRESAS,
+
+    E.CAPITAL_MEDIANO,
+    A.CAPITAL_MEDIO,
+    E.CAPITAL_P25,
+    E.CAPITAL_P75,
+    E.CAPITAL_P90,
+
+    ROUND(
+        E.CAPITAL_P75 - E.CAPITAL_P25,
+        2
+    ) AS AMPLITUDE_INTERQUARTIL,
+
+    ROUND(
+        E.CAPITAL_P90 - E.CAPITAL_P25,
+        2
+    ) AS AMPLITUDE_P90_P25,
+
+    ROUND(
+        E.CAPITAL_P90 / NULLIF(E.CAPITAL_MEDIANO, 0),
+        2
+    ) AS RAZAO_P90_MEDIANA,
+
+    ROUND(
+        A.CAPITAL_MEDIO / NULLIF(E.CAPITAL_MEDIANO, 0),
+        2
+    ) AS RAZAO_MEDIA_MEDIANA
+
+FROM {{ ref('fct_estatisticas_capital_social') }} E
+
+INNER JOIN {{ ref('fct_auditoria_capital_social') }} A
+    ON E.CODIGO_NATUREZA = A.CODIGO_NATUREZA
+    AND E.CODIGO_PORTE = A.CODIGO_PORTE

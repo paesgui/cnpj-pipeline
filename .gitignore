@@ -1,0 +1,22 @@
+# Ambiente Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+
+# dbt
+target/
+dbt_packages/
+logs/
+
+# Credenciais
+.env
+.env.*
+
+# Dados brutos e processados
+data/
+
+# Arquivos temporários
+*.log
+.DS_Store
+Thumbs.db

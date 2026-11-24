@@ -1,0 +1,72 @@
+
+version: 2
+
+models:
+  - name: stg_empresas
+    columns:
+      - name: CNPJ_BASICO
+        data_tests:
+          - not_null
+          - unique
+
+      - name: RAZAO_SOCIAL
+        data_tests:
+          - not_null
+
+      - name: NATUREZA_JURIDICA
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_naturezas')
+                field: CODIGO_NATUREZA
+
+      - name: PORTE_EMPRESA
+        data_tests:
+          - relationships:
+              arguments:
+                to: ref('stg_portes_empresa')
+                field: CODIGO_PORTE
+              config:
+                where: "PORTE_EMPRESA IS NOT NULL AND TRIM(PORTE_EMPRESA) <> ''"
+
+  - name: stg_estabelecimentos
+    columns:
+      - name: CNPJ_BASICO
+        data_tests:
+          - not_null
+
+      - name: CNPJ_ORDEM
+        data_tests:
+          - not_null
+
+      - name: CNPJ_DV
+        data_tests:
+          - not_null
+
+      - name: IDENTIFICADOR_MATRIZ_FILIAL
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['1', '2']
+
+  - name: stg_naturezas
+    columns:
+      - name: CODIGO_NATUREZA
+        data_tests:
+          - not_null
+          - unique
+
+      - name: DESCRICAO_NATUREZA
+        data_tests:
+          - not_null
+
+  - name: stg_portes_empresa
+    columns:
+      - name: CODIGO_PORTE
+        data_tests:
+          - not_null
+          - unique
+
+      - name: DESCRICAO_PORTE
+        data_tests:
+          - not_null

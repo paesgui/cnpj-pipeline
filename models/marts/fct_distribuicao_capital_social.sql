@@ -1,0 +1,64 @@
+
+WITH BASE AS (
+    SELECT
+        CASE
+            WHEN CAPITAL_SOCIAL < 0 THEN 0
+            WHEN CAPITAL_SOCIAL = 0 THEN 1
+            WHEN CAPITAL_SOCIAL <= 1000 THEN 2
+            WHEN CAPITAL_SOCIAL <= 10000 THEN 3
+            WHEN CAPITAL_SOCIAL <= 50000 THEN 4
+            WHEN CAPITAL_SOCIAL <= 100000 THEN 5
+            WHEN CAPITAL_SOCIAL <= 1000000 THEN 6
+            ELSE 7
+        END AS ORDEM_FAIXA,
+
+        CASE
+            WHEN CAPITAL_SOCIAL < 0 THEN 'Capital negativo'
+            WHEN CAPITAL_SOCIAL = 0 THEN 'Capital zerado'
+            WHEN CAPITAL_SOCIAL <= 1000 THEN 'Até R$ 1 mil'
+            WHEN CAPITAL_SOCIAL <= 10000 THEN 'R$ 1 mil a R$ 10 mil'
+            WHEN CAPITAL_SOCIAL <= 50000 THEN 'R$ 10 mil a R$ 50 mil'
+            WHEN CAPITAL_SOCIAL <= 100000 THEN 'R$ 50 mil a R$ 100 mil'
+            WHEN CAPITAL_SOCIAL <= 1000000 THEN 'R$ 100 mil a R$ 1 milhão'
+            ELSE 'Acima de R$ 1 milhão'
+        END AS FAIXA_CAPITAL,
+
+        PORTE_EMPRESA,
+        CAPITAL_SOCIAL
+
+    FROM {{ ref('stg_empresas') }}
+),
+
+AGREGADO AS (
+    SELECT
+        ORDEM_FAIXA,
+        FAIXA_CAPITAL,
+        PORTE_EMPRESA,
+        COUNT(*) AS TOTAL_EMPRESAS,
+        ROUND(AVG(CAPITAL_SOCIAL), 2) AS CAPITAL_MEDIO,
+        ROUND(SUM(CAPITAL_SOCIAL), 2) AS CAPITAL_TOTAL
+    FROM BASE
+    GROUP BY
+        ORDEM_FAIXA,
+        FAIXA_CAPITAL,
+        PORTE_EMPRESA
+)
+
+SELECT
+    ORDEM_FAIXA,
+    FAIXA_CAPITAL,
+    PORTE_EMPRESA,
+    TOTAL_EMPRESAS,
+    CAPITAL_MEDIO,
+    CAPITAL_TOTAL,
+
+    ROUND(
+        TOTAL_EMPRESAS * 100.0 /
+        SUM(TOTAL_EMPRESAS) OVER (
+            PARTITION BY PORTE_EMPRESA
+        ),
+        2
+    ) AS PERCENTUAL_DENTRO_DO_PORTE
+
+FROM AGREGADO
+ORDER BY ORDEM_FAIXA, PORTE_EMPRESA
