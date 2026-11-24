@@ -9,7 +9,7 @@ from pathlib import Path
 from urllib.parse import unquote, urljoin
 
 # Configurações
-TOKEN = "YggdBLfdninEJX9"
+TOKEN = "INFORME O TOKEN"
 COMPETENCIA = "2026-10"
 
 BASE_URL = "https://arquivos.receitafederal.gov.br"
