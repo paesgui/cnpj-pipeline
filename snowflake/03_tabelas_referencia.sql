@@ -26,6 +26,3 @@ ON destino.CODIGO_PORTE = origem.CODIGO_PORTE
 WHEN NOT MATCHED THEN
     INSERT (CODIGO_PORTE, DESCRICAO_PORTE)
     VALUES (origem.CODIGO_PORTE, origem.DESCRICAO_PORTE);
-
--- A tabela NATUREZAS foi carregada a partir do CSV no stage S3.
--- Consulte 04_cargas_e_validacoes.sql para o exemplo de COPY INTO.
