@@ -1,8 +1,6 @@
 -- ============================================================================
 -- 01 - INFRAESTRUTURA SNOWFLAKE E ACESSO AO S3
 -- ============================================================================
--- ATENCAO: substitua os placeholders pelos valores da sua conta AWS.
--- Nao publique ARN real, chaves, tokens ou credenciais no repositorio.
 
 CREATE DATABASE IF NOT EXISTS CNPJ_DB;
 
@@ -12,7 +10,7 @@ CREATE WAREHOUSE IF NOT EXISTS CNPJ_WH
     AUTO_RESUME = TRUE
     INITIALLY_SUSPENDED = TRUE;
 
--- A integracao requer uma IAM Role previamente configurada na AWS.
+
 CREATE STORAGE INTEGRATION CNPJ_S3_INTEGRATION
     TYPE = EXTERNAL_STAGE
     STORAGE_PROVIDER = S3
@@ -22,7 +20,6 @@ CREATE STORAGE INTEGRATION CNPJ_S3_INTEGRATION
         's3://NOME_DO_BUCKET/'
     );
 
--- Confira as propriedades e a configuracao de confianca da integracao.
 DESC INTEGRATION CNPJ_S3_INTEGRATION;
 
 CREATE OR REPLACE FILE FORMAT CNPJ_DB.PUBLIC.CNPJ_CSV_FORMAT
@@ -53,7 +50,3 @@ CREATE STAGE IF NOT EXISTS CNPJ_DB.PUBLIC.CNPJ_BRONZE_STAGE
     STORAGE_INTEGRATION = CNPJ_S3_INTEGRATION
     FILE_FORMAT = CNPJ_DB.PUBLIC.CNPJ_CSV_FORMAT;
 
--- Comandos de inspecao:
--- DESC INTEGRATION CNPJ_S3_INTEGRATION;
--- DESC STAGE CNPJ_DB.PUBLIC.CNPJ_S3_STAGE;
--- LIST @CNPJ_DB.PUBLIC.CNPJ_S3_STAGE;
